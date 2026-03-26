@@ -10,6 +10,8 @@ Serie de 5 laboratorios progresivos que exploran los servicios de Inteligencia A
 - Explorar y comparar Modelos Fundacionales (FMs) disponibles en Amazon Bedrock
 - Aplicar técnicas de prompting progresivas: Zero-Shot, Few-Shot y Chain-of-Thought
 - Comprender los parámetros de inferencia y su impacto en la calidad y costo de las respuestas
+- Implementar Generación Aumentada por Recuperación (RAG) con Amazon Bedrock Knowledge Bases para fundamentar respuestas en documentos verificados
+- Configurar Guardrails de seguridad con temas denegados y filtros PII para proteger aplicaciones de IA generativa
 
 ---
 
@@ -28,7 +30,7 @@ Serie de 5 laboratorios progresivos que exploran los servicios de Inteligencia A
 |-----|--------|-------------|--------|
 | [Lab 01](lab-01-sagemaker-canvas/) | ML No-Code con Amazon SageMaker Canvas | Construya un modelo de clasificación binaria para predicción meteorológica sin escribir código | 40 min |
 | [Lab 02](lab-02-bedrock-playgrounds/) | IA Generativa con Amazon Bedrock Playgrounds | Compare modelos fundacionales y aplique técnicas de prompting con ejemplos de geofísica | 40 min |
-| Lab 03 | Próximamente | — | — |
+| [Lab 03](lab-03-bedrock-rag-guardrails/) | RAG y Guardrails con Amazon Bedrock | Implemente RAG con Knowledge Bases y configure Guardrails de seguridad con documentos geofísicos | 55 min |
 | Lab 04 | Próximamente | — | — |
 | Lab 05 | Próximamente | — | — |
 
@@ -40,6 +42,8 @@ Serie de 5 laboratorios progresivos que exploran los servicios de Inteligencia A
 - [Amazon SageMaker Canvas](https://docs.aws.amazon.com/sagemaker/latest/dg/canvas.html) — Documentación oficial de SageMaker Canvas
 - [Amazon Bedrock](https://docs.aws.amazon.com/bedrock/latest/userguide/what-is-bedrock.html) — Documentación oficial de Amazon Bedrock
 - [Amazon Bedrock Playgrounds](https://docs.aws.amazon.com/bedrock/latest/userguide/playgrounds.html) — Guía de uso de los Playgrounds
+- [Amazon Bedrock Knowledge Bases](https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base.html) — Documentación oficial de Knowledge Bases para RAG
+- [Amazon Bedrock Guardrails](https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails.html) — Documentación oficial de Guardrails
 
 ### AWS Skill Builder
 - [AWS Skill Builder](https://skillbuilder.aws/) — Plataforma oficial de aprendizaje de AWS con cursos gratuitos y de pago
