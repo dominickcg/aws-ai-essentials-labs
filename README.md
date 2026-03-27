@@ -11,7 +11,8 @@ Serie de 5 laboratorios progresivos que exploran los servicios de Inteligencia A
 - Aplicar técnicas de prompting progresivas: Zero-Shot, Few-Shot y Chain-of-Thought
 - Comprender los parámetros de inferencia y su impacto en la calidad y costo de las respuestas
 - Implementar Generación Aumentada por Recuperación (RAG) con Amazon Bedrock Knowledge Bases para fundamentar respuestas en documentos verificados
-- Configurar Guardrails de seguridad con temas denegados y filtros PII para proteger aplicaciones de IA generativa
+- Configurar Guardrails de seguridad en Amazon Bedrock con temas denegados, filtros PII y filtros de contenido para proteger aplicaciones de IA generativa
+- Integrar Guardrails con Knowledge Bases RAG para proteger respuestas generadas a partir de documentos indexados
 
 ---
 
@@ -30,8 +31,8 @@ Serie de 5 laboratorios progresivos que exploran los servicios de Inteligencia A
 |-----|--------|-------------|--------|
 | [Lab 01](lab-01-sagemaker-canvas/) | ML No-Code con Amazon SageMaker Canvas | Construya un modelo de clasificación binaria para predicción meteorológica sin escribir código | 40 min |
 | [Lab 02](lab-02-bedrock-playgrounds/) | IA Generativa con Amazon Bedrock Playgrounds | Compare modelos fundacionales y aplique técnicas de prompting con ejemplos de geofísica | 40 min |
-| [Lab 03](lab-03-bedrock-rag-guardrails/) | RAG y Guardrails con Amazon Bedrock | Implemente RAG con Knowledge Bases y configure Guardrails de seguridad con documentos geofísicos | 55 min |
-| Lab 04 | Próximamente | — | — |
+| [Lab 03](lab-03-bedrock-rag/) | RAG con Amazon Bedrock Knowledge Bases | Implemente RAG con Knowledge Bases para fundamentar respuestas en documentos geofísicos verificados | 35 min |
+| [Lab 04](lab-04-bedrock-guardrails/) | Guardrails con Amazon Bedrock | Configure Guardrails de seguridad con temas denegados, filtros PII e integración con Knowledge Bases RAG | 25 min |
 | Lab 05 | Próximamente | — | — |
 
 ---

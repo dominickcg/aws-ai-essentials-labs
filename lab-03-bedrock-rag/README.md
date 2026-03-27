@@ -1,4 +1,4 @@
-# 🗃️ Laboratorio 3 — Parte 1 y 2: RAG con Amazon Bedrock Knowledge Bases
+# 🗃️ Laboratorio 3 — RAG con Amazon Bedrock Knowledge Bases
 
 Configure la infraestructura base (IAM y S3) y construya una Knowledge Base en Amazon Bedrock que indexe documentos geofísicos para realizar consultas RAG con citas de fuentes verificadas. Experimente cómo la Generación Aumentada por Recuperación (RAG) reduce las alucinaciones al fundamentar las respuestas del modelo en datos reales del dominio de la geofísica y sismología.
 
@@ -8,12 +8,12 @@ Configure la infraestructura base (IAM y S3) y construya una Knowledge Base en A
 
 1. [Objetivos de Aprendizaje](#objetivos-de-aprendizaje)
 2. [Prerrequisitos](#prerrequisitos)
-3. [Parte 1: Preparación del Entorno](#parte-1-preparación-del-entorno)
+3. [Preparación del Entorno](#preparación-del-entorno)
    - [Paso 1: Verificación de Región AWS](#paso-1-verificación-de-región-aws)
    - [Paso 2: Verificar Service-Linked Role de IAM](#paso-2-verificar-service-linked-role-de-iam)
    - [Paso 3: Crear Bucket S3](#paso-3-crear-bucket-s3)
    - [Paso 4: Cargar Documentos Geofísicos](#paso-4-cargar-documentos-geofísicos)
-4. [Parte 2: RAG con Knowledge Bases](#parte-2-rag-con-knowledge-bases)
+4. [RAG con Knowledge Bases](#rag-con-knowledge-bases)
    - [Paso 5: Crear Knowledge Base](#paso-5-crear-knowledge-base)
    - [Paso 6: Configurar Data Source](#paso-6-configurar-data-source)
    - [Paso 7: Sincronización](#paso-7-sincronización)
@@ -28,7 +28,7 @@ Configure la infraestructura base (IAM y S3) y construya una Knowledge Base en A
 
 ## Objetivos de Aprendizaje
 
-Al completar esta parte del laboratorio, usted será capaz de:
+Al completar este laboratorio, usted será capaz de:
 
 - Configurar la infraestructura base de IAM y S3 necesaria para que Amazon Bedrock Knowledge Bases acceda a documentos geofísicos.
 - Crear y configurar una Knowledge Base en Amazon Bedrock conectando un bucket S3 con Amazon OpenSearch Serverless como vector store.
@@ -48,13 +48,13 @@ Antes de iniciar este laboratorio, asegúrese de contar con lo siguiente:
 - Archivos de documentos geofísicos disponibles en la carpeta `documentos-geofisicos/` de este laboratorio.
 - Archivo de prompts de prueba [`prompts-rag.md`](prompts-rag.md) disponible en esta carpeta del laboratorio.
 
-Antes de comenzar, revise la [Guía de Conceptos Fundamentales de RAG y Guardrails](CONCEPTOS-RAG-GUARDRAILS.md) para familiarizarse con los conceptos de RAG, Knowledge Bases, embeddings, bases de datos vectoriales y Guardrails que se utilizarán durante el laboratorio.
+Antes de comenzar, revise la [Guía de Conceptos Fundamentales de RAG](CONCEPTOS-RAG.md) para familiarizarse con los conceptos de RAG, Knowledge Bases, embeddings y bases de datos vectoriales que se utilizarán durante el laboratorio.
 
 > **Nota**: Este laboratorio es independiente de los Labs 01 y 02. No se requieren recursos creados en laboratorios anteriores.
 
 ---
 
-## Parte 1: Preparación del Entorno
+## Preparación del Entorno
 
 ### Paso 1: Verificación de Región AWS
 
@@ -69,7 +69,7 @@ Antes de comenzar, revise la [Guía de Conceptos Fundamentales de RAG y Guardrai
 
 ### Paso 2: Verificar Service-Linked Role de IAM
 
-En este paso verificará que existe el rol de servicio que permite a Amazon Bedrock acceder a S3 y OpenSearch Serverless en nombre del usuario. Para comprender el concepto de IAM Service Role, consulte la sección [Preparación del Entorno](CONCEPTOS-RAG-GUARDRAILS.md#7-preparación-del-entorno) del documento de conceptos.
+En este paso verificará que existe el rol de servicio que permite a Amazon Bedrock acceder a S3 y OpenSearch Serverless en nombre del usuario. Para comprender el concepto de IAM Service Role, consulte la sección [Preparación del Entorno](CONCEPTOS-RAG.md#5-preparación-del-entorno) del documento de conceptos.
 
 1. Utilice la barra de búsqueda global (parte superior de la consola) y escriba `IAM`.
 2. Haga clic en **IAM** en los resultados para acceder a la consola del servicio.
@@ -122,11 +122,11 @@ En este paso cargará los documentos geofísicos proporcionados en la carpeta de
 
 ---
 
-## Parte 2: RAG con Knowledge Bases
+## RAG con Knowledge Bases
 
 ### Paso 5: Crear Knowledge Base
 
-En este paso creará una Knowledge Base en Amazon Bedrock que conectará el bucket S3 con un vector store para implementar RAG. Para comprender la arquitectura completa de una Knowledge Base, consulte la sección [Knowledge Bases en Amazon Bedrock](CONCEPTOS-RAG-GUARDRAILS.md#4-knowledge-bases-en-amazon-bedrock) del documento de conceptos.
+En este paso creará una Knowledge Base en Amazon Bedrock que conectará el bucket S3 con un vector store para implementar RAG. Para comprender la arquitectura completa de una Knowledge Base, consulte la sección [Knowledge Bases en Amazon Bedrock](CONCEPTOS-RAG.md#4-knowledge-bases-en-amazon-bedrock) del documento de conceptos.
 
 1. Utilice la barra de búsqueda global y escriba `Amazon Bedrock`.
 2. Haga clic en **Amazon Bedrock** en los resultados para acceder a la consola del servicio.
@@ -160,7 +160,7 @@ En este paso creará una Knowledge Base en Amazon Bedrock que conectará el buck
 
 ### Paso 7: Sincronización
 
-En este paso iniciará el proceso de sincronización que lee los documentos de S3, los divide en chunks, genera embeddings y puebla el índice vectorial. Para comprender el flujo completo de ingestión, consulte la sección [Arquitectura de RAG Paso a Paso](CONCEPTOS-RAG-GUARDRAILS.md#2-arquitectura-de-rag-paso-a-paso) del documento de conceptos.
+En este paso iniciará el proceso de sincronización que lee los documentos de S3, los divide en chunks, genera embeddings y puebla el índice vectorial. Para comprender el flujo completo de ingestión, consulte la sección [Arquitectura de RAG Paso a Paso](CONCEPTOS-RAG.md#2-arquitectura-de-rag-paso-a-paso) del documento de conceptos.
 
 1. Dentro de la Knowledge Base, localice el Data Source configurado en el paso anterior.
 2. Seleccione el Data Source y haga clic en el botón **Sync**.
@@ -258,6 +258,10 @@ Después de ejecutar las consultas RAG en el paso anterior, verifique que las re
 4. Compare el fragmento citado con la respuesta generada para confirmar que el modelo utilizó la información del documento como base para su respuesta.
 
 **✓ Verificación**: Las respuestas RAG de las Consultas 1, 2 y 3 incluyen citas con el nombre del archivo de origen en S3, y al expandir las citas se puede ver el fragmento de texto original recuperado del documento.
+
+---
+
+> ⚠️ **Importante**: Conserve todos los recursos creados en este laboratorio (Knowledge Base, bucket S3, vector store). Los utilizaremos en el **[Lab 04 — Guardrails con Amazon Bedrock](../lab-04-bedrock-guardrails/README.md)**.
 
 ---
 
