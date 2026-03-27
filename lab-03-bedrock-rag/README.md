@@ -1,6 +1,6 @@
 # 🗃️ Laboratorio 3 — RAG con Amazon Bedrock Knowledge Bases
 
-Configure la infraestructura base (IAM y S3) y construya una Knowledge Base en Amazon Bedrock que indexe documentos geofísicos para realizar consultas RAG con citas de fuentes verificadas. Experimente cómo la Generación Aumentada por Recuperación (RAG) reduce las alucinaciones al fundamentar las respuestas del modelo en datos reales del dominio de la geofísica y sismología.
+Configure un bucket S3 y construya una Knowledge Base en Amazon Bedrock que indexe documentos geofísicos para realizar consultas RAG con citas de fuentes verificadas. Experimente cómo la Generación Aumentada por Recuperación (RAG) reduce las alucinaciones al fundamentar las respuestas del modelo en datos reales del dominio de la geofísica y sismología.
 
 ---
 
@@ -10,16 +10,14 @@ Configure la infraestructura base (IAM y S3) y construya una Knowledge Base en A
 2. [Prerrequisitos](#prerrequisitos)
 3. [Preparación del Entorno](#preparación-del-entorno)
    - [Paso 1: Verificación de Región AWS](#paso-1-verificación-de-región-aws)
-   - [Paso 2: Verificar Service-Linked Role de IAM](#paso-2-verificar-service-linked-role-de-iam)
-   - [Paso 3: Crear Bucket S3](#paso-3-crear-bucket-s3)
-   - [Paso 4: Cargar Documentos Geofísicos](#paso-4-cargar-documentos-geofísicos)
+   - [Paso 2: Crear Bucket S3](#paso-2-crear-bucket-s3)
+   - [Paso 3: Cargar Documentos Geofísicos](#paso-3-cargar-documentos-geofísicos)
 4. [RAG con Knowledge Bases](#rag-con-knowledge-bases)
-   - [Paso 5: Crear Knowledge Base](#paso-5-crear-knowledge-base)
-   - [Paso 6: Configurar Data Source](#paso-6-configurar-data-source)
-   - [Paso 7: Sincronización](#paso-7-sincronización)
-   - [Paso 8: Seleccionar Modelo de Generación](#paso-8-seleccionar-modelo-de-generación)
-   - [Paso 9: Consultas RAG](#paso-9-consultas-rag)
-   - [Paso 10: Verificar Citas](#paso-10-verificar-citas)
+   - [Paso 4: Crear Knowledge Base](#paso-4-crear-knowledge-base)
+   - [Paso 5: Sincronización](#paso-5-sincronización)
+   - [Paso 6: Seleccionar Modelo de Generación](#paso-6-seleccionar-modelo-de-generación)
+   - [Paso 7: Consultas RAG](#paso-7-consultas-rag)
+   - [Paso 8: Verificar Citas](#paso-8-verificar-citas)
 5. [Solución de Problemas](#solución-de-problemas)
 
 ---
@@ -30,7 +28,7 @@ Configure la infraestructura base (IAM y S3) y construya una Knowledge Base en A
 
 Al completar este laboratorio, usted será capaz de:
 
-- Configurar la infraestructura base de IAM y S3 necesaria para que Amazon Bedrock Knowledge Bases acceda a documentos geofísicos.
+- Configurar un bucket S3 como fuente de datos para que Amazon Bedrock Knowledge Bases indexe documentos geofísicos.
 - Crear y configurar una Knowledge Base en Amazon Bedrock conectando un bucket S3 con Amazon OpenSearch Serverless como vector store.
 - Ejecutar consultas RAG sobre documentos de sismología y verificar que las respuestas incluyen citas de las fuentes originales.
 - Comprender cómo RAG reduce las alucinaciones al fundamentar las respuestas del modelo en datos verificados del dominio geofísico.
@@ -67,56 +65,36 @@ Antes de comenzar, revise la [Guía de Conceptos Fundamentales de RAG](CONCEPTOS
 
 ---
 
-### Paso 2: Verificar Service-Linked Role de IAM
-
-En este paso verificará que existe el rol de servicio que permite a Amazon Bedrock acceder a S3 y OpenSearch Serverless en nombre del usuario. Para comprender el concepto de IAM Service Role, consulte la sección [Preparación del Entorno](CONCEPTOS-RAG.md#5-preparación-del-entorno) del documento de conceptos.
-
-1. Utilice la barra de búsqueda global (parte superior de la consola) y escriba `IAM`.
-2. Haga clic en **IAM** en los resultados para acceder a la consola del servicio.
-3. En el panel de navegación de la izquierda, haga clic en **Roles**.
-4. En el campo de búsqueda de roles, escriba `Bedrock` para filtrar los roles relacionados con Amazon Bedrock.
-5. Localice el Service-Linked Role y haga clic en su nombre para ver los detalles.
-6. Verifique los siguientes elementos del rol:
-   - **Entidad de confianza**: Debe mostrar `bedrock.amazonaws.com` como la entidad que puede asumir este rol
-   - **Permisos**: El rol debe incluir:
-     - Acceso de lectura a Amazon S3 (para leer los documentos del bucket)
-     - Permiso `aoss:APIAccessAll` para Amazon OpenSearch Serverless (para crear y gestionar el índice vectorial)
-
-**✓ Verificación**: El rol de servicio de Amazon Bedrock existe, tiene la entidad de confianza `bedrock.amazonaws.com` y cuenta con permisos de lectura a S3 y acceso a OpenSearch Serverless (`aoss:APIAccessAll`).
-
-> ⚠️ **Nota**: Si no encuentra el rol o recibe errores de permisos al verificarlo, notifique al instructor de inmediato. No intente crear ni modificar roles IAM por su cuenta.
-
----
-
-### Paso 3: Crear Bucket S3
+### Paso 2: Crear Bucket S3
 
 1. Utilice la barra de búsqueda global y escriba `S3`.
 2. Haga clic en **S3** en los resultados para acceder a la consola del servicio.
-3. Haga clic en el botón naranja **Crear bucket**.
-4. Configure los siguientes parámetros:
-   - **Nombre del bucket**: `s3-lab03-knowledge-source-{nombre-participante}`
-   - **Región**: Mantenga la misma región verificada en el Paso 1
-5. En la sección **Cifrado predeterminado**, configure:
-   - **Tipo de cifrado del lado del servidor**: Seleccione **Cifrado del lado del servidor con claves administradas de Amazon S3 (SSE-S3)**
-6. Mantenga las demás opciones con sus valores predeterminados.
-7. Haga clic en **Crear bucket**.
+3. En el panel de navegación de la izquierda, haga clic en **General purpose buckets**.
+4. Haga clic en el botón **Create bucket**.
+5. Configure los siguientes parámetros:
+   - **Bucket name**: `s3-lab03-knowledge-source-{nombre-participante}`
+   - **Region**: Mantenga la misma región verificada en el Paso 1
+6. En la sección **Default encryption**, configure:
+   - **Encryption type**: Seleccione **Server-side encryption with Amazon S3 managed keys (SSE-S3)**
+7. Mantenga las demás opciones con sus valores predeterminados.
+8. Haga clic en **Create bucket**.
 
 **✓ Verificación**: El bucket `s3-lab03-knowledge-source-{nombre-participante}` aparece en la lista de buckets de S3 con cifrado SSE-S3 habilitado.
 
 ---
 
-### Paso 4: Cargar Documentos Geofísicos
+### Paso 3: Cargar Documentos Geofísicos
 
 En este paso cargará los documentos geofísicos proporcionados en la carpeta del laboratorio al bucket S3. Estos documentos serán la fuente de conocimiento para la Knowledge Base.
 
 1. En la consola de S3, haga clic en el nombre del bucket `s3-lab03-knowledge-source-{nombre-participante}` para abrirlo.
-2. Haga clic en el botón naranja **Cargar**.
-3. Haga clic en **Agregar archivos** y seleccione los siguientes 3 archivos de la carpeta `documentos-geofisicos/` de este laboratorio:
+2. Haga clic en el botón **Upload**.
+3. Haga clic en **Add files** y seleccione los siguientes 3 archivos de la carpeta `documentos-geofisicos/` de este laboratorio:
    - [`reporte-actividad-sismica.md`](documentos-geofisicos/reporte-actividad-sismica.md) — Reporte de actividad sísmica con datos de estaciones, magnitudes, profundidades y coordenadas de eventos recientes
    - [`procedimientos-monitoreo-sismico.md`](documentos-geofisicos/procedimientos-monitoreo-sismico.md) — Guía de procedimientos de monitoreo sísmico con protocolos de operación de estaciones sismológicas
    - [`glosario-geofisica-sismologia.md`](documentos-geofisicos/glosario-geofisica-sismologia.md) — Glosario técnico de geofísica y sismología con definiciones de términos del dominio
 4. Verifique que los 3 archivos están en formato Markdown (`.md`), compatible con Amazon Bedrock Knowledge Bases para RAG.
-5. Haga clic en **Cargar** y espere a que la carga se complete exitosamente.
+5. Haga clic en **Upload** y espere a que la carga se complete exitosamente.
 
 **✓ Verificación**: Los 3 archivos Markdown aparecen listados dentro del bucket `s3-lab03-knowledge-source-{nombre-participante}` con estado de carga exitoso.
 
@@ -124,45 +102,36 @@ En este paso cargará los documentos geofísicos proporcionados en la carpeta de
 
 ## RAG con Knowledge Bases
 
-### Paso 5: Crear Knowledge Base
+### Paso 4: Crear Knowledge Base
 
 En este paso creará una Knowledge Base en Amazon Bedrock que conectará el bucket S3 con un vector store para implementar RAG. Para comprender la arquitectura completa de una Knowledge Base, consulte la sección [Knowledge Bases en Amazon Bedrock](CONCEPTOS-RAG.md#4-knowledge-bases-en-amazon-bedrock) del documento de conceptos.
 
 1. Utilice la barra de búsqueda global y escriba `Amazon Bedrock`.
 2. Haga clic en **Amazon Bedrock** en los resultados para acceder a la consola del servicio.
-3. En el panel de navegación de la izquierda, en la sección **Orchestration**, haga clic en **Knowledge bases**.
-4. Haga clic en el botón **Create knowledge base**.
+3. En el panel de navegación de la izquierda, haga clic en **Knowledge bases**.
+4. Haga clic en el botón **Create knowledge base** y seleccione la opción para crear una Knowledge Base con vector store.
 5. Configure los detalles de la Knowledge Base:
    - **Name**: Ingrese un nombre descriptivo que incluya `{nombre-participante}` (ej. `kb-geofisica-{nombre-participante}`)
    - **Description**: (Opcional) Agregue una descripción como "Knowledge Base de documentos geofísicos para RAG"
-6. En la sección de **Data source**, seleccione **Amazon S3** como tipo de fuente de datos.
-7. En la sección de **Embeddings model**, seleccione **Amazon Titan Text Embeddings v2** como modelo de embeddings.
-8. En la sección de **Vector store**, seleccione la opción **Quick create a new vector store** para que Amazon Bedrock aprovisione automáticamente una colección de Amazon OpenSearch Serverless.
-9. Revise la configuración y haga clic en **Create knowledge base**.
-
-**✓ Verificación**: La Knowledge Base se creó exitosamente y aparece en la lista de Knowledge Bases de Amazon Bedrock con el nombre que incluye `{nombre-participante}`.
-
----
-
-### Paso 6: Configurar Data Source
-
-1. Dentro de la Knowledge Base recién creada, localice la sección **Data source**.
-2. Haga clic en el Data Source de S3 para configurarlo (o haga clic en **Add data source** si no se configuró durante la creación).
-3. Configure el URI del bucket S3:
+6. Seleccione **Amazon S3** como fuente de datos (Data source).
+7. Configure la conexión al bucket S3:
+   - Proporcione un nombre para el Data Source.
    - **S3 URI**: `s3://s3-lab03-knowledge-source-{nombre-participante}/`
-4. Verifique que la ruta apunta al bucket correcto donde cargó los documentos geofísicos en el Paso 4.
-5. Mantenga la **Chunking strategy** en **Default** (Amazon Bedrock optimizará automáticamente el tamaño de los chunks).
-6. Guarde la configuración del Data Source.
+   - Verifique que la ruta apunta al bucket correcto donde cargó los documentos geofísicos en el Paso 3.
+8. En la sección **Content parsing and chunking**, mantenga la estrategia de chunking en **Default** (Amazon Bedrock optimizará automáticamente el tamaño de los chunks).
+9. En la sección **Embeddings model**, seleccione **Amazon Titan Text Embeddings v2** como modelo de embeddings.
+10. En la sección **Vector database**, seleccione la opción **Quick create a new vector store** y elija **Amazon OpenSearch Serverless** para que Amazon Bedrock aprovisione automáticamente una colección vectorial.
+11. Revise la configuración y haga clic en **Create knowledge base**.
 
-**✓ Verificación**: El Data Source muestra el URI `s3://s3-lab03-knowledge-source-{nombre-participante}/` y está correctamente asociado a la Knowledge Base.
+**✓ Verificación**: La Knowledge Base se creó exitosamente y aparece en la lista de Knowledge Bases de Amazon Bedrock con el nombre que incluye `{nombre-participante}`. El Data Source muestra el URI `s3://s3-lab03-knowledge-source-{nombre-participante}/` y está correctamente asociado a la Knowledge Base.
 
 ---
 
-### Paso 7: Sincronización
+### Paso 5: Sincronización
 
 En este paso iniciará el proceso de sincronización que lee los documentos de S3, los divide en chunks, genera embeddings y puebla el índice vectorial. Para comprender el flujo completo de ingestión, consulte la sección [Arquitectura de RAG Paso a Paso](CONCEPTOS-RAG.md#2-arquitectura-de-rag-paso-a-paso) del documento de conceptos.
 
-1. Dentro de la Knowledge Base, localice el Data Source configurado en el paso anterior.
+1. Dentro de la Knowledge Base, localice la sección **Data source** donde aparece el Data Source configurado en el paso anterior.
 2. Seleccione el Data Source y haga clic en el botón **Sync**.
 3. El proceso de sincronización ejecutará las siguientes operaciones automáticamente:
    - **Lectura**: Amazon Bedrock lee los 3 documentos Markdown del bucket S3
@@ -170,25 +139,26 @@ En este paso iniciará el proceso de sincronización que lee los documentos de S
    - **Embeddings**: Cada chunk se transforma en un vector numérico usando Amazon Titan Text Embeddings v2
    - **Indexación**: Los vectores se almacenan en el índice de Amazon OpenSearch Serverless
 
-⏱️ **Nota**: El proceso de sincronización puede tardar varios minutos dependiendo del volumen de documentos. Espere a que el estado del Data Source cambie a **Available** antes de continuar con el siguiente paso. No cancele ni reinicie el proceso.
+⏱️ **Nota**: El proceso de sincronización puede tardar varios minutos dependiendo del volumen de documentos. Espere a que aparezca un banner verde de éxito indicando que la sincronización se completó correctamente. No cancele ni reinicie el proceso.
 
-**✓ Verificación**: El estado del Data Source muestra **Available** y el resumen de sincronización indica que los 3 documentos fueron procesados exitosamente.
-
----
-
-### Paso 8: Seleccionar Modelo de Generación
-
-1. Dentro de la Knowledge Base, localice la ventana de prueba (Test window) en el panel derecho de la consola.
-2. Si la ventana de prueba no está visible, haga clic en **Test knowledge base** o en el botón de prueba disponible en la interfaz.
-3. En la sección **Select model** de la ventana de prueba, haga clic en el selector de modelo.
-4. Seleccione un modelo de la familia **Anthropic Claude** disponible en Amazon Bedrock como modelo de generación para las consultas RAG.
-5. Confirme la selección del modelo.
-
-**✓ Verificación**: El modelo Anthropic Claude está seleccionado en la ventana de prueba de la Knowledge Base y la interfaz está lista para recibir consultas RAG.
+**✓ Verificación**: La sincronización se completó exitosamente (banner verde de éxito) y el resumen de sincronización indica que los 3 documentos fueron procesados. Puede seleccionar el Data Source para ver el **Sync history** y confirmar el resultado.
 
 ---
 
-### Paso 9: Consultas RAG
+### Paso 6: Seleccionar Modelo de Generación
+
+1. Dentro de la Knowledge Base, localice la ventana de prueba (Test window) en el panel derecho de la consola. La ventana de prueba se expande automáticamente desde la derecha al seleccionar una Knowledge Base.
+2. Si la ventana de prueba no está visible, haga clic en el botón **Test knowledge base** disponible en la interfaz.
+3. En la ventana de prueba, active el toggle **Generate responses** para habilitar la generación de respuestas basadas en los datos de la Knowledge Base. Amazon Bedrock generará respuestas fundamentadas en sus fuentes de datos e incluirá citas (footnotes) con la información proporcionada.
+4. Haga clic en el botón **Select model** para elegir el modelo de generación.
+5. Seleccione un modelo de la familia **Anthropic Claude** disponible en Amazon Bedrock como modelo de generación para las consultas RAG.
+6. Haga clic en **Apply** para confirmar la selección del modelo.
+
+**✓ Verificación**: El toggle **Generate responses** está activado, el modelo Anthropic Claude está seleccionado en la ventana de prueba de la Knowledge Base y la interfaz está lista para recibir consultas RAG.
+
+---
+
+### Paso 7: Consultas RAG
 
 En este paso probará la Knowledge Base con consultas geofísicas para verificar que el RAG recupera información relevante de los documentos indexados. Copie los prompts del archivo [`prompts-rag.md`](prompts-rag.md) proporcionado en esta carpeta del laboratorio.
 
@@ -200,7 +170,7 @@ En este paso probará la Knowledge Base con consultas geofísicas para verificar
    ¿Cuáles fueron los eventos sísmicos más significativos registrados y cuáles fueron sus magnitudes, profundidades y ubicaciones?
    ```
 
-2. Envíe la consulta y observe la respuesta generada.
+2. Haga clic en el botón **Run** para enviar la consulta y observe la respuesta generada.
 3. Verifique que la respuesta contiene datos concretos extraídos del documento `reporte-actividad-sismica.md` (magnitudes, profundidades, coordenadas).
 
 **✓ Verificación**: La respuesta incluye datos sísmicos específicos recuperados de los documentos indexados, no información genérica del modelo.
@@ -213,7 +183,7 @@ En este paso probará la Knowledge Base con consultas geofísicas para verificar
    ¿Cómo se relacionan los procedimientos de monitoreo sísmico del IGP con la detección y análisis de los eventos sísmicos recientes documentados?
    ```
 
-2. Envíe la consulta y observe la respuesta generada.
+2. Haga clic en **Run** para enviar la consulta y observe la respuesta generada.
 3. Verifique que la respuesta integra información tanto del reporte de actividad sísmica como de los procedimientos de monitoreo.
 
 **✓ Verificación**: La respuesta combina información de múltiples documentos, demostrando la capacidad de RAG para sintetizar datos de diferentes fuentes.
@@ -226,7 +196,7 @@ En este paso probará la Knowledge Base con consultas geofísicas para verificar
    Explica qué es la zona de Wadati-Benioff y cuál es su relevancia para la sismicidad en el Perú.
    ```
 
-2. Envíe la consulta y observe la respuesta generada.
+2. Haga clic en **Run** para enviar la consulta y observe la respuesta generada.
 3. Verifique que la respuesta recupera definiciones del glosario técnico de geofísica.
 
 **✓ Verificación**: La respuesta incluye definiciones técnicas recuperadas del glosario geofísico indexado en la Knowledge Base.
@@ -239,25 +209,26 @@ En este paso probará la Knowledge Base con consultas geofísicas para verificar
    ¿Cuáles son las principales erupciones volcánicas registradas en el Perú durante los últimos 10 años y qué impacto tuvieron en las comunidades cercanas?
    ```
 
-2. Envíe la consulta y observe la respuesta generada.
+2. Haga clic en **Run** para enviar la consulta y observe la respuesta generada.
 3. Verifique que el modelo indica que no encontró información relevante en los documentos indexados, en lugar de inventar una respuesta.
 
 **✓ Verificación**: El modelo reconoce que la información sobre erupciones volcánicas no está contenida en los documentos de la Knowledge Base, demostrando que RAG reduce las alucinaciones al limitar las respuestas a datos verificados.
 
 ---
 
-### Paso 10: Verificar Citas
+### Paso 8: Verificar Citas
 
-Después de ejecutar las consultas RAG en el paso anterior, verifique que las respuestas incluyen citas (references/footnotes) que referencian los documentos originales.
+Después de ejecutar las consultas RAG en el paso anterior, verifique que las respuestas incluyen citas en forma de notas al pie (footnotes) que referencian los documentos originales.
 
-1. Revise las respuestas generadas en las Consultas 1, 2 y 3 del Paso 9.
-2. Para cada respuesta, localice las **citas** o **referencias** que aparecen al final o como notas al pie:
-   - Cada cita debe incluir el nombre del archivo de origen en S3 (ej. `reporte-actividad-sismica.md`, `procedimientos-monitoreo-sismico.md`, `glosario-geofisica-sismologia.md`)
+1. Revise las respuestas generadas en las Consultas 1, 2 y 3 del Paso 7.
+2. Para cada respuesta, localice las **notas al pie** (footnotes) que aparecen en la respuesta:
+   - Cada footnote referencia una fuente de datos utilizada para generar esa parte de la respuesta
    - Las citas permiten al usuario verificar la fuente de cada afirmación en la respuesta
-3. Haga clic en una cita para expandir el fragmento (chunk) de texto original que fue recuperado del documento.
-4. Compare el fragmento citado con la respuesta generada para confirmar que el modelo utilizó la información del documento como base para su respuesta.
+3. Haga clic en un **footnote** para ver un extracto de la fuente citada correspondiente a esa parte de la respuesta. Cada cita debe incluir el nombre del archivo de origen en S3 (ej. `reporte-actividad-sismica.md`, `procedimientos-monitoreo-sismico.md`, `glosario-geofisica-sismologia.md`).
+4. Para ver los detalles completos de los fragmentos recuperados, haga clic en el botón **Show source details**.
+5. Expanda los fragmentos (chunks) individuales para ver el texto original recuperado del documento y compare con la respuesta generada para confirmar que el modelo utilizó la información del documento como base para su respuesta.
 
-**✓ Verificación**: Las respuestas RAG de las Consultas 1, 2 y 3 incluyen citas con el nombre del archivo de origen en S3, y al expandir las citas se puede ver el fragmento de texto original recuperado del documento.
+**✓ Verificación**: Las respuestas RAG de las Consultas 1, 2 y 3 incluyen footnotes con referencias a los archivos de origen en S3, y al hacer clic en **Show source details** se pueden ver los fragmentos de texto original recuperados de los documentos.
 
 ---
 
@@ -270,7 +241,7 @@ Después de ejecutar las consultas RAG en el paso anterior, verifique que las re
 Si la creación de la Knowledge Base o la sincronización falla, siga estos pasos de diagnóstico:
 
 1. **Verificar permisos del rol IAM**:
-   - Regrese al Paso 2 y confirme que el Service-Linked Role de Amazon Bedrock tiene la entidad de confianza `bedrock.amazonaws.com`
+   - En la consola de IAM, verifique que el Service-Linked Role de Amazon Bedrock tiene la entidad de confianza `bedrock.amazonaws.com`
    - Verifique que el rol incluye permisos de lectura a S3 y `aoss:APIAccessAll` para OpenSearch Serverless
 
 2. **Verificar accesibilidad del bucket S3**:
