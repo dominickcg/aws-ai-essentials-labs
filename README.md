@@ -13,6 +13,7 @@ Serie de 5 laboratorios progresivos que exploran los servicios de Inteligencia A
 - Implementar Generación Aumentada por Recuperación (RAG) con Amazon Bedrock Knowledge Bases para fundamentar respuestas en documentos verificados
 - Configurar Guardrails de seguridad en Amazon Bedrock con temas denegados, filtros PII y filtros de contenido para proteger aplicaciones de IA generativa
 - Integrar Guardrails con Knowledge Bases RAG para proteger respuestas generadas a partir de documentos indexados
+- Configurar Model Invocation Logging y Amazon CloudWatch para implementar gobernanza y auditoría de invocaciones de modelos de IA generativa
 
 ---
 
@@ -33,7 +34,7 @@ Serie de 5 laboratorios progresivos que exploran los servicios de Inteligencia A
 | [Lab 02](lab-02-bedrock-playgrounds/) | IA Generativa con Amazon Bedrock Playgrounds | Compare modelos fundacionales y aplique técnicas de prompting con ejemplos de geofísica | 40 min |
 | [Lab 03](lab-03-bedrock-rag/) | RAG con Amazon Bedrock Knowledge Bases | Implemente RAG con Knowledge Bases para fundamentar respuestas en documentos geofísicos verificados | 35 min |
 | [Lab 04](lab-04-bedrock-guardrails/) | Guardrails con Amazon Bedrock | Configure Guardrails de seguridad con temas denegados, filtros PII e integración con Knowledge Bases RAG | 25 min |
-| Lab 05 | Próximamente | — | — |
+| [Lab 05](lab-05-cloudwatch-logging/) | Gobernanza y Auditoría con CloudWatch | Configure Model Invocation Logging en Amazon Bedrock con CloudWatch para capturar y auditar todas las invocaciones a modelos fundacionales | 20 min |
 
 ---
 
@@ -45,6 +46,8 @@ Serie de 5 laboratorios progresivos que exploran los servicios de Inteligencia A
 - [Amazon Bedrock Playgrounds](https://docs.aws.amazon.com/bedrock/latest/userguide/playgrounds.html) — Guía de uso de los Playgrounds
 - [Amazon Bedrock Knowledge Bases](https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base.html) — Documentación oficial de Knowledge Bases para RAG
 - [Amazon Bedrock Guardrails](https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails.html) — Documentación oficial de Guardrails
+- [Amazon CloudWatch Logs](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/WhatIsCloudWatchLogs.html) — Documentación oficial de Amazon CloudWatch Logs
+- [Amazon Bedrock Model Invocation Logging](https://docs.aws.amazon.com/bedrock/latest/userguide/model-invocation-logging.html) — Documentación oficial de Model Invocation Logging
 
 ### AWS Skill Builder
 - [AWS Skill Builder](https://skillbuilder.aws/) — Plataforma oficial de aprendizaje de AWS con cursos gratuitos y de pago
