@@ -1,0 +1,44 @@
+# Tareas de Implementación — Lab 05: Gobernanza y Auditoría con CloudWatch
+
+- [x] 1. Crear infraestructura de tests del Lab 05
+  - [x] 1.1 Crear `lab-05-cloudwatch-logging/package.json` con nombre `lab-05-cloudwatch-logging-tests`, tipo `module`, script `test` con `vitest --run`, y dependencias `vitest` ^3.2.1 y `fast-check` ^4.1.1
+  - [x] 1.2 Crear `lab-05-cloudwatch-logging/tsconfig.json` con target ES2022, module ESNext, moduleResolution bundler, strict true, esModuleInterop true, types ["vitest/globals"]
+  - [x] 1.3 Crear `lab-05-cloudwatch-logging/vitest.config.ts` configurado para ejecutar tests en `tests/**/*.test.ts`
+  - [x] 1.4 Ejecutar `npm install` en `lab-05-cloudwatch-logging/` para generar node_modules y package-lock.json
+- [x] 2. Crear archivo de soporte: política IAM de ejemplo
+  - [x] 2.1 Crear `lab-05-cloudwatch-logging/bedrock-logging-policy.json` con permisos `logs:CreateLogGroup`, `logs:CreateLogStream`, `logs:PutLogEvents` sobre recurso `arn:aws:logs:*:*:log-group:/aws/bedrock/*`
+- [x] 3. Crear documento de conceptos CONCEPTOS-LOGGING.md
+  - [x] 3.1 Crear `lab-05-cloudwatch-logging/CONCEPTOS-LOGGING.md` con título, descripción introductoria e índice con anchor links a las 6 secciones definidas en el diseño
+  - [x] 3.2 Escribir sección 1: Model Invocation Logging en Amazon Bedrock — qué captura, por qué es necesario, tipos de datos (metadatos, prompts, completions), diagrama ASCII del flujo Bedrock → CloudWatch
+  - [x] 3.3 Escribir sección 2: Amazon CloudWatch: Log Groups y Log Streams — jerarquía Log Group → Log Stream → Log Event, navegación en consola, diagrama ASCII de jerarquía
+  - [x] 3.4 Escribir sección 3: Políticas de Retención de Registros — opciones disponibles (1 día a 10 años, Never expire), impacto en costos, recomendación para entornos de laboratorio (1 día)
+  - [x] 3.5 Escribir sección 4: Campos de Auditoría en Registros de Invocación — tabla con `accountId`, `modelArn`, `region`, `requestId`, `input.inputText`, `output.outputText`, timestamps y sus descripciones
+  - [x] 3.6 Escribir sección 5: Casos de Uso de Gobernanza y Cumplimiento — auditoría de uso de IA, detección de uso indebido, trazabilidad de costos, cumplimiento normativo
+  - [x] 3.7 Escribir sección 6: Terminología AWS — tabla con términos técnicos, nombre en interfaz AWS y definición
+- [x] 4. Crear README.md del Lab 05
+  - [x] 4.1 Crear `lab-05-cloudwatch-logging/README.md` con título con emoji, descripción introductoria, índice con anchor links, tiempo estimado (20 minutos), objetivos de aprendizaje (3 puntos sobre logging, auditoría y gobernanza), y prerrequisitos (sin dependencias de labs anteriores, con referencia a CONCEPTOS-LOGGING.md)
+  - [x] 4.2 Escribir sección "Configuración de CloudWatch": Paso 1 (verificación de región AWS), Paso 2 (crear Log Group `/aws/bedrock/model-invocations` desde consola de CloudWatch), Paso 3 (configurar política de retención a 1 día). Incluir checkpoints de verificación después de cada paso.
+  - [x] 4.3 Escribir sección "Configuración de Model Invocation Logging": Paso 4 (habilitar logging en Amazon Bedrock Settings, seleccionar Log Group, configurar Service Role con referencia a `bedrock-logging-policy.json`), Paso 5 (verificar configuración guardada con estado activo). Incluir checkpoints de verificación.
+  - [x] 4.4 Escribir sección "Validación de Registros de Auditoría": Paso 6 (enviar prompt de prueba en Playground de Bedrock), Paso 7 (navegar a CloudWatch e inspeccionar Log Stream con nota de espera ⏱️ 1-2 minutos), Paso 8 (identificar campos `accountId`, `modelArn`, `input.inputText`, `output.outputText` en JSON). Incluir checkpoints de verificación.
+  - [x] 4.5 Escribir sección "Ciclo de Vida de Recursos" con tabla indicando que todos los recursos pueden eliminarse al finalizar (último laboratorio), e instrucciones de limpieza para Log Group y configuración de logging
+  - [x] 4.6 Escribir sección "Solución de Problemas" con diagnóstico para: logs no aparecen, permisos insuficientes, Log Group ya existe. Incluir referencia a TROUBLESHOOTING.md y nota sobre errores que requieren asistencia del instructor.
+- [x] 5. Actualizar README principal del proyecto
+  - [x] 5.1 Reemplazar fila placeholder "Lab 05 | Próximamente" en la tabla de laboratorios con enlace a `lab-05-cloudwatch-logging/`, título "Gobernanza y Auditoría con CloudWatch", descripción y tiempo estimado de 20 min
+  - [x] 5.2 Agregar objetivo de aprendizaje sobre logging, gobernanza y auditoría de invocaciones de modelos de IA generativa en la sección "Objetivos de Aprendizaje"
+  - [x] 5.3 Agregar enlaces de documentación de Amazon CloudWatch Logs y Amazon Bedrock Model Invocation Logging en la sección "Contenido Adicional > AWS Documentation"
+- [x] 6. Crear tests unitarios de validación
+  - [x] 6.1 Crear `tests/readme-structure.test.ts` — validar: título con emoji, índice presente, tiempo estimado, objetivos de aprendizaje, prerrequisitos sin dependencias, verificación de región como paso 1, checkpoints de verificación, ciclo de vida, solución de problemas, escrito en español
+  - [x] 6.2 Crear `tests/readme-content.test.ts` — validar: instrucciones de CloudWatch Log Group con `/aws/bedrock/model-invocations`, retención de 1 día, instrucciones de Model Invocation Logging, instrucciones de Playground, campos de auditoría, referencia a CONCEPTOS-LOGGING.md
+  - [x] 6.3 Crear `tests/conceptos-logging.test.ts` — validar: secciones de Model Invocation Logging, CloudWatch Log Groups, Log Retention Policy, campos de auditoría, gobernanza y cumplimiento, escrito en español
+  - [x] 6.4 Crear `tests/main-readme.test.ts` — validar: fila Lab 05 con enlace a `lab-05-cloudwatch-logging/`, título correcto, tiempo estimado, no placeholder "Próximamente", enlaces de documentación, objetivo de aprendizaje, Labs 01-04 intactos, Contribuciones y Licencia intactas
+  - [x] 6.5 Crear `tests/cross-references.test.ts` — validar: README Lab05 enlaza a CONCEPTOS-LOGGING.md (archivo existe), README Principal enlaza a lab-05-cloudwatch-logging/ (directorio existe), README Lab05 enlaza a TROUBLESHOOTING.md
+- [x] 7. Crear tests de propiedades (property-based)
+  - [x] 7.1 Crear `tests/readme-anchors.property.test.ts` — propiedad: todo anchor link en el índice del README del Lab 05 corresponde a un heading real en el documento
+  - [x] 7.2 Crear `tests/readme-steps.property.test.ts` — propiedad: los pasos numerados "### Paso N" siguen secuencia estrictamente creciente sin saltos dentro de cada sección
+- [x] 8. Ejecutar tests y corregir errores
+  - [x] 8.1 Ejecutar `npm test` en `lab-05-cloudwatch-logging/` y verificar que todos los tests pasan
+  - [x] 8.2 Corregir cualquier error detectado en los tests (estructura, contenido, referencias cruzadas)
+- [x] 9. Validar contenido con documentación oficial de AWS
+  - [x] 9.1 Usar el MCP server de AWS Documentation para verificar que los pasos de navegación en consola de CloudWatch y Bedrock son correctos y actualizados
+  - [x] 9.2 Verificar que los nombres de campos de auditoría (`accountId`, `modelArn`, `input.inputText`, `output.outputText`) coinciden con la documentación oficial de Model Invocation Logging
+  - [x] 9.3 Actualizar cualquier información desactualizada encontrada durante la validación
