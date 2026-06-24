@@ -35,7 +35,7 @@ ML Tradicional (Lab 01):
   Respuesta: Sí / No  (clasificación binaria)
 
 IA Generativa (Lab 02):
-  Instrucción: "Escribe un informe técnico sobre las condiciones sísmicas de la región andina."
+  Instrucción: "Escribe un informe ejecutivo sobre las tendencias de ventas del último trimestre en una cadena de retail."
   Respuesta: Texto completamente nuevo, generado en el momento
 ```
 
@@ -101,24 +101,24 @@ Los LLMs generan texto de una manera que puede parecer sorprendente: **predicen 
 
 ```
 Proceso de generación:
-  Prompt: "Las ondas sísmicas P viajan a través de..."
+  Prompt: "El cliente solicitó un reembolso porque el producto llegó..."
   
-  Paso 1: Modelo predice → "materiales"
-  Paso 2: Modelo predice → "sólidos"
-  Paso 3: Modelo predice → "y"
-  Paso 4: Modelo predice → "líquidos"
+  Paso 1: Modelo predice → "dañado"
+  Paso 2: Modelo predice → "y"
+  Paso 3: Modelo predice → "no"
+  Paso 4: Modelo predice → "funcionaba"
   ...y así sucesivamente hasta completar la respuesta
 ```
 
 ### Distribución de probabilidad sobre el vocabulario
 
-En cada paso, el modelo calcula una distribución de probabilidad sobre todo su vocabulario — que puede contener decenas de miles de tokens posibles — y selecciona uno. Por ejemplo, dado el contexto "Las ondas sísmicas P viajan a través de...", el modelo podría asignar probabilidades como:
+En cada paso, el modelo calcula una distribución de probabilidad sobre todo su vocabulario — que puede contener decenas de miles de tokens posibles — y selecciona uno. Por ejemplo, dado el contexto "El cliente solicitó un reembolso porque el producto llegó...", el modelo podría asignar probabilidades como:
 
 ```
-"materiales"  → 32%
-"rocas"       → 28%
-"la"          → 15%
-"medios"      → 12%
+"dañado"      → 32%
+"defectuoso"  → 28%
+"tarde"       → 15%
+"incompleto"  → 12%
 otros tokens  → 13%
 ```
 
@@ -141,8 +141,8 @@ El **Prompt** es la instrucción o entrada de texto que el usuario envía al mod
 
 ```
 Ejemplo de prompt de usuario:
-"Explica el concepto de magnitud sísmica en la escala de Richter
- como si fuera para un estudiante de secundaria."
+"Explica el concepto de margen bruto de un producto
+ como si fuera para un vendedor de tienda."
 ```
 
 ### System Prompt (Prompt de sistema)
@@ -151,8 +151,9 @@ El **System Prompt** son instrucciones de comportamiento que configuran el rol, 
 
 ```
 Ejemplo de system prompt para este laboratorio:
-"Eres un geofísico experto en sismología. Responde siempre con
- datos técnicos y cita fuentes cuando sea posible."
+"Eres un analista de negocio experto en retail y comercio
+ electrónico. Responde siempre con datos cuantitativos y cita
+ fuentes cuando sea posible."
 ```
 
 ### Diferencia clave
@@ -162,7 +163,7 @@ Ejemplo de system prompt para este laboratorio:
 | System Prompt | "Quién es" el modelo y cómo debe comportarse | Al inicio de la sesión | Toda la sesión |
 | Prompt de usuario | "Qué debe hacer" en cada interacción específica | En cada mensaje | Solo ese turno |
 
-El system prompt establece el marco de comportamiento general; el prompt del usuario define la tarea concreta dentro de ese marco. Un modelo configurado como "geofísico experto" responderá de manera diferente a uno sin system prompt, incluso ante la misma pregunta.
+El system prompt establece el marco de comportamiento general; el prompt del usuario define la tarea concreta dentro de ese marco. Un modelo configurado como "analista de negocio experto" responderá de manera diferente a uno sin system prompt, incluso ante la misma pregunta.
 
 ---
 
@@ -207,12 +208,12 @@ Familia de modelos de código abierto con:
 
 La elección del modelo depende del caso de uso específico:
 
-| Criterio | Descripción | Relevancia en geofísica |
+| Criterio | Descripción | Relevancia en negocio |
 |----------|-------------|------------------------|
-| Razonamiento | Capacidad para resolver problemas complejos paso a paso | Alta: cálculos de distancia epicentral, análisis de mecanismos focales |
+| Razonamiento | Capacidad para resolver problemas complejos paso a paso | Alta: cálculos de precios y descuentos, análisis de rentabilidad |
 | Velocidad de respuesta | Tiempo hasta el primer token (Latencia) | Media: consultas interactivas en tiempo real |
-| Costo por token | Precio por millón de tokens de entrada/salida | Alta: procesamiento masivo de reportes sísmicos |
-| Context Window | Máximo de tokens procesables en una interacción | Alta: análisis de catálogos sísmicos extensos |
+| Costo por token | Precio por millón de tokens de entrada/salida | Alta: procesamiento masivo de tickets y reseñas de clientes |
+| Context Window | Máximo de tokens procesables en una interacción | Alta: análisis de catálogos de productos y reportes extensos |
 
 ### Nota sobre otros proveedores
 
@@ -250,7 +251,7 @@ Estas dos métricas miden aspectos distintos del rendimiento de un modelo:
 | Latencia | Tiempo hasta que aparece el primer token de la respuesta | Milisegundos (ms) | Chatbots interactivos, consultas en tiempo real |
 | Throughput | Velocidad total de generación de tokens | Tokens por segundo | Procesamiento por lotes, generación de reportes masivos |
 
-En el contexto de este laboratorio, la **Latencia** es la métrica más relevante, ya que se trabaja de forma interactiva en el Chat Playground. Para un sistema de alerta temprana de tsunamis, por ejemplo, una Latencia baja sería crítica.
+En el contexto de este laboratorio, la **Latencia** es la métrica más relevante, ya que se trabaja de forma interactiva en el Chat Playground. Para un chatbot de atención al cliente en una tienda en línea, por ejemplo, una Latencia baja sería crítica.
 
 ---
 
@@ -267,17 +268,17 @@ Rango: 0.0 — 1.0
 
 Temperature = 0.0  →  Determinista
   El modelo siempre selecciona el token de mayor probabilidad.
-  Ideal para: código SQL, cálculos de distancia epicentral,
-              reportes técnicos estandarizados.
+  Ideal para: código SQL, cálculos de precios y descuentos,
+              reportes financieros estandarizados.
 
 Temperature = 0.5  →  Balance
   Mezcla de consistencia y variedad.
-  Ideal para: resúmenes técnicos, análisis moderadamente creativos.
+  Ideal para: resúmenes de negocio, análisis moderadamente creativos.
 
 Temperature = 0.9  →  Alta variabilidad
   El modelo explora tokens menos probables con mayor frecuencia.
-  Ideal para: descripciones narrativas de eventos sísmicos,
-              contenido educativo divulgativo.
+  Ideal para: descripciones de productos, campañas de marketing,
+              contenido divulgativo.
 ```
 
 ### Top-P (Nucleus Sampling)
@@ -305,7 +306,7 @@ El **Max Generation** establece el límite máximo de tokens de salida que el mo
 Rango: varía según el modelo (típicamente 1 — 4,096+ tokens)
 
 Max Generation = 256   →  Respuestas cortas y precisas
-  Ideal para: clasificaciones sísmicas, respuestas de sí/no,
+  Ideal para: clasificaciones de tickets, respuestas de sí/no,
               extracción de datos específicos.
 
 Max Generation = 2,048  →  Respuestas extensas
@@ -326,10 +327,10 @@ El **Prompt Engineering** es la disciplina de diseñar instrucciones efectivas p
 La técnica **Zero-Shot** consiste en enviar una instrucción directa al modelo sin proporcionar ejemplos previos. El modelo responde basándose únicamente en su conocimiento preentrenado.
 
 ```
-Ejemplo Zero-Shot en geofísica:
-"Clasifica este reporte sísmico: Se registró un evento de magnitud 4.2
- con epicentro a 15 km de profundidad en la zona de subducción de la
- costa central."
+Ejemplo Zero-Shot en negocio:
+"Clasifica esta reseña de cliente: Compré unos audífonos inalámbricos
+ hace dos semanas y dejaron de cargar al cuarto día. Intenté contactar
+ al soporte tres veces y nadie respondió."
 ```
 
 Cuándo usarla: tareas generales donde el formato de respuesta no es crítico, o cuando se quiere evaluar el conocimiento base del modelo sin guía adicional.
@@ -339,21 +340,21 @@ Cuándo usarla: tareas generales donde el formato de respuesta no es crítico, o
 La técnica **Few-Shot** incluye ejemplos de entrada/salida en el prompt para enseñar al modelo un formato o patrón de respuesta específico antes de solicitar la clasificación o generación de un nuevo caso.
 
 ```
-Ejemplo Few-Shot en geofísica (estructura):
+Ejemplo Few-Shot en negocio (estructura):
 
 Ejemplo 1:
-{"reporte": "Magnitud 6.1, profundidad 35 km, zona de falla transformante",
- "clasificacion": "Sismo_Tectonico", "nivel_alerta": "Moderado"}
+{"ticket": "Me cobraron dos veces el mismo pedido",
+ "categoria": "Facturacion", "prioridad": "Alta"}
 
 Ejemplo 2:
-{"reporte": "Magnitud 2.3, profundidad 5 km, bajo cono volcánico activo",
- "clasificacion": "Sismo_Volcanico", "nivel_alerta": "Vigilancia"}
+{"ticket": "El paquete dice entregado pero no ha llegado",
+ "categoria": "Envio", "prioridad": "Media"}
 
 Ejemplo 3:
-{"reporte": "Magnitud 3.1, profundidad 2 km, zona de extracción de fluidos",
- "clasificacion": "Sismo_Inducido", "nivel_alerta": "Monitoreo"}
+{"ticket": "La licuadora llego con la jarra rota",
+ "categoria": "Producto_Defectuoso", "prioridad": "Alta"}
 
-Ahora clasifica: "Magnitud 5.4, profundidad 80 km, zona de subducción..."
+Ahora clasifica: "Solicite un cambio de talla y no recibo la guia de devolucion..."
 ```
 
 Cuándo usarla: cuando se necesita que el modelo imite un formato específico (JSON, tabla, estructura de reporte) o cuando la tarea requiere un patrón de respuesta consistente.
@@ -363,26 +364,26 @@ Cuándo usarla: cuando se necesita que el modelo imite un formato específico (J
 La técnica **Chain-of-Thought** solicita al modelo que "piense paso a paso" antes de dar la respuesta final. Esto mejora significativamente el razonamiento lógico-matemático al descomponer problemas complejos en pasos intermedios auditables.
 
 ```
-Ejemplo Chain-of-Thought en geofísica:
-"Un sismógrafo registra la llegada de ondas P a las 14:32:10 UTC
- y la llegada de ondas S a las 14:32:18 UTC. Sabiendo que las ondas P
- viajan a 6 km/s y las ondas S a 3.5 km/s en corteza continental,
- calcula la distancia aproximada al epicentro.
+Ejemplo Chain-of-Thought en negocio:
+"Un cliente compra una laptop con precio de lista de 1200 dólares.
+ La tienda aplica un descuento del 15% por temporada y, sobre el
+ precio ya rebajado, se añade un impuesto de ventas (IGV) del 18%.
+ Calcula el precio final que pagará el cliente.
  Piensa paso a paso y explica cada parte del cálculo antes de dar
  el resultado final."
 ```
 
-El modelo debería desglosar: (a) el intervalo S-P, (b) la fórmula de distancia usando la diferencia de velocidades, y (c) el resultado con unidades. Esto permite al geofísico auditar la lógica de razonamiento de la IA.
+El modelo debería desglosar: (a) el cálculo del descuento, (b) el precio con descuento aplicado, y (c) el precio final con el impuesto incluido. Esto permite al analista auditar la lógica de razonamiento de la IA.
 
 Cuándo usarla: problemas matemáticos, razonamiento lógico complejo, análisis de múltiples variables donde se necesita verificar el proceso, no solo el resultado.
 
 ### Tabla comparativa
 
-| Técnica | Cuándo usarla | Ventaja principal | Limitación principal | Ejemplo en geofísica |
+| Técnica | Cuándo usarla | Ventaja principal | Limitación principal | Ejemplo en negocio |
 |---------|--------------|-------------------|---------------------|----------------------|
-| Zero-Shot | Tareas generales, evaluación del modelo | Simple, rápida, sin preparación | Formato de respuesta impredecible | Clasificación libre de un reporte sísmico |
-| Few-Shot | Formato de salida específico requerido | Controla el formato con precisión | Requiere diseñar ejemplos de calidad | Clasificación JSON de eventos sísmicos |
-| Chain-of-Thought | Razonamiento matemático o lógico complejo | Permite auditar el proceso de razonamiento | Respuestas más largas, mayor costo en tokens | Cálculo de distancia epicentral paso a paso |
+| Zero-Shot | Tareas generales, evaluación del modelo | Simple, rápida, sin preparación | Formato de respuesta impredecible | Clasificación libre de una reseña de cliente |
+| Few-Shot | Formato de salida específico requerido | Controla el formato con precisión | Requiere diseñar ejemplos de calidad | Clasificación JSON de tickets de soporte |
+| Chain-of-Thought | Razonamiento matemático o lógico complejo | Permite auditar el proceso de razonamiento | Respuestas más largas, mayor costo en tokens | Cálculo de precio con descuento paso a paso |
 
 ---
 
@@ -392,34 +393,36 @@ Cuándo usarla: problemas matemáticos, razonamiento lógico complejo, análisis
 
 La **Alucinación** es una respuesta factualmente incorrecta generada por el modelo con alta confianza y coherencia gramatical. El modelo presenta información falsa como si fuera verdadera, sin señales de incertidumbre.
 
-En el contexto de la geofísica, las alucinaciones son especialmente peligrosas porque el modelo puede:
+En el contexto del negocio, las alucinaciones son especialmente peligrosas porque el modelo puede:
 
-- Inventar datos de magnitud sísmica o coordenadas de epicentros con aparente precisión
-- Atribuir terremotos a fallas geológicas inexistentes con total convicción
-- Citar estudios científicos o catálogos sísmicos que no existen
-- Proporcionar fechas, profundidades o mecanismos focales incorrectos
+- Inventar cifras financieras o métricas de ventas con aparente precisión
+- Atribuir resultados o récords comerciales a empresas que nunca los lograron, con total convicción
+- Citar estudios de mercado, informes o estadísticas que no existen
+- Proporcionar fechas, precios o políticas de la empresa incorrectos
 
 ```
 Ejemplo de alucinación potencial:
-Pregunta: "¿Cuál fue la magnitud exacta del terremoto de Pisco, Perú, 2007?"
+Pregunta: "¿Cuál fue el ingreso neto (net sales) exacto de Amazon en el Q4 del año fiscal 2007?"
 
 Respuesta alucinada (ejemplo):
-"El terremoto de Pisco del 15 de agosto de 2007 tuvo una magnitud
- de 7.9 Mw según el USGS, con epicentro a 39.1°S, 72.6°W..."
- (datos inventados con aparente precisión)
+"El ingreso neto de Amazon en el cuarto trimestre de 2007 fue de
+ exactamente 8,210 millones de dólares, con 32,500 empleados al
+ cierre del año..."
+ (cifras inventadas con aparente precisión)
 
 Respuesta correcta verificable:
-Magnitud 8.0 Mw, epicentro aproximado a 60 km al oeste-noroeste
-de Chincha Alta, según registros del IGP y USGS.
+Las cifras oficiales se encuentran en el informe anual (10-K) de
+Amazon presentado ante la SEC; siempre deben contrastarse con esa
+fuente en lugar de confiar en el dato generado por el modelo.
 ```
 
-Las alucinaciones son especialmente peligrosas en aplicaciones críticas como sistemas de alerta temprana de tsunamis, evaluación de riesgo sísmico estructural o investigación científica.
+Las alucinaciones son especialmente peligrosas en aplicaciones críticas como decisiones de inversión, reportes financieros a stakeholders o atención al cliente con información de precios y políticas.
 
 ### Prompt Injection / Jailbreaking
 
 El **Prompt Injection** es un intento malicioso de manipular el prompt para que el modelo ignore sus directrices de seguridad, revele información prohibida o ejecute instrucciones no autorizadas. El **Jailbreaking** es una variante que busca eludir las restricciones de seguridad del modelo mediante instrucciones creativas o engañosas.
 
-En el contexto de aplicaciones geofísicas, un Prompt Injection podría intentar que el modelo genere alertas sísmicas falsas o proporcione información técnica restringida. La mitigación incluye el uso de system prompts robustos y la validación de las entradas del usuario antes de enviarlas al modelo.
+En el contexto de aplicaciones de negocio, un Prompt Injection podría intentar que el modelo apruebe descuentos no autorizados, genere reembolsos indebidos o revele información confidencial de la empresa. La mitigación incluye el uso de system prompts robustos y la validación de las entradas del usuario antes de enviarlas al modelo.
 
 ### PII (Personally Identifiable Information)
 
@@ -456,7 +459,7 @@ Este laboratorio es el segundo de la serie AWS AI Essentials. Comparar ambos enf
 | Entrenamiento | Requerido por el usuario | Realizado por el proveedor |
 | Flexibilidad | Alta para la tarea específica | Alta para tareas generales |
 | Herramienta AWS | SageMaker Canvas | Amazon Bedrock |
-| Caso de uso en geofísica | Predecir magnitud de un sismo dado un conjunto de variables | Explicar conceptos sísmicos, generar reportes, clasificar eventos |
+| Caso de uso en negocio | Predecir si un cliente abandonará (churn) dado un conjunto de variables | Explicar conceptos de negocio, generar reportes, clasificar tickets y reseñas |
 
 **Nota**: Amazon Bedrock proporciona acceso a Foundation Models preentrenados, mientras que SageMaker Canvas (Lab 01) permite entrenar modelos personalizados con datos propios. Ambos enfoques son complementarios y se utilizan en diferentes etapas de un proyecto de IA.
 
@@ -470,12 +473,12 @@ Un **Embedding** es una representación numérica de un texto en un espacio mate
 
 ```
 Ejemplo conceptual de embedding:
-  "terremoto"  → [0.82, -0.31, 0.67, 0.12, ...]  (vector de alta dimensión)
-  "sismo"      → [0.79, -0.28, 0.71, 0.15, ...]  (vector similar al de "terremoto")
-  "receta"     → [-0.45, 0.92, -0.18, 0.63, ...]  (vector muy diferente)
+  "reembolso"  → [0.82, -0.31, 0.67, 0.12, ...]  (vector de alta dimensión)
+  "devolución" → [0.79, -0.28, 0.71, 0.15, ...]  (vector similar al de "reembolso")
+  "envío"      → [-0.45, 0.92, -0.18, 0.63, ...]  (vector diferente)
 ```
 
-La distancia entre vectores captura la similitud semántica: los vectores de "terremoto" y "sismo" estarán cercanos en este espacio, mientras que "terremoto" y "receta de cocina" estarán distantes. Esto permite al modelo "comprender" que ambas palabras se refieren al mismo fenómeno geológico.
+La distancia entre vectores captura la similitud semántica: los vectores de "reembolso" y "devolución" estarán cercanos en este espacio, mientras que "reembolso" y "envío" estarán más distantes. Esto permite al modelo "comprender" que las dos primeras palabras se refieren a un concepto comercial muy relacionado.
 
 Los embeddings son el puente conceptual entre el mundo numérico del ML (Lab 01) y el mundo textual de la IA Generativa (Lab 02): en ambos casos, el modelo trabaja con números, pero en la IA Generativa esos números representan significado semántico.
 
@@ -483,11 +486,11 @@ Los embeddings son el puente conceptual entre el mundo numérico del ML (Lab 01)
 
 La **Multimodalidad** es la capacidad de un modelo de procesar y generar múltiples tipos de datos — texto, imágenes, audio, video — en una misma interacción. Algunos Foundation Models disponibles en Amazon Bedrock son multimodales.
 
-Aunque este laboratorio se enfoca en modelos de texto (LLMs), la multimodalidad es una tendencia creciente con aplicaciones relevantes en geofísica:
+Aunque este laboratorio se enfoca en modelos de texto (LLMs), la multimodalidad es una tendencia creciente con aplicaciones relevantes en retail y comercio electrónico:
 
-- **Análisis de imágenes satelitales**: un modelo multimodal podría analizar imágenes de deformación del terreno post-sismo
-- **Interpretación de sismogramas visuales**: procesar la imagen de un sismograma y extraer información sobre el evento sísmico
-- **Generación de reportes con visualizaciones**: combinar análisis textual con generación de gráficos de distribución de réplicas
+- **Análisis de imágenes de producto**: un modelo multimodal podría analizar fotografías de un catálogo y generar descripciones automáticas
+- **Procesamiento de tickets escaneados**: extraer información de facturas o comprobantes a partir de su imagen
+- **Generación de reportes con visualizaciones**: combinar análisis textual con generación de gráficos de tendencias de ventas
 
 ---
 
@@ -498,7 +501,6 @@ La siguiente tabla resume los términos clave de Amazon Bedrock utilizados en es
 | Término técnico | Nombre en interfaz AWS | Definición |
 |----------------|------------------------|------------|
 | Foundation Model (FM) | Model catalog | Modelo de IA de propósito general preentrenado con grandes volúmenes de datos |
-| Model Access | Model access | Sección de la consola de Amazon Bedrock donde se habilita el acceso a modelos de terceros |
 | Chat Playground | Playground → Chat | Interfaz interactiva para enviar prompts y recibir respuestas en formato conversacional |
 | Compare mode | Compare mode | Funcionalidad del Chat Playground que permite comparar respuestas de dos modelos simultáneamente |
 | System Prompt | System prompt | Campo separado en el Playground para configurar el rol y comportamiento del modelo |

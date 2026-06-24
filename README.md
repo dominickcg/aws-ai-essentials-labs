@@ -31,7 +31,7 @@ Serie de 5 laboratorios progresivos que exploran los servicios de Inteligencia A
 | Lab | Título | Descripción | Tiempo |
 |-----|--------|-------------|--------|
 | [Lab 01](lab-01-sagemaker-canvas/) | ML No-Code con Amazon SageMaker Canvas | Construya un modelo de clasificación binaria para predicción meteorológica sin escribir código | 40 min |
-| [Lab 02](lab-02-bedrock-playgrounds/) | IA Generativa con Amazon Bedrock Playgrounds | Compare modelos fundacionales y aplique técnicas de prompting con ejemplos de geofísica | 40 min |
+| [Lab 02](lab-02-bedrock-playgrounds/) | IA Generativa con Amazon Bedrock Playgrounds | Compare modelos fundacionales y aplique técnicas de prompting con ejemplos de retail y comercio electrónico | 40 min |
 | [Lab 03](lab-03-bedrock-rag/) | RAG con Amazon Bedrock Knowledge Bases | Implemente RAG con Knowledge Bases para fundamentar respuestas en documentos geofísicos verificados | 35 min |
 | [Lab 04](lab-04-bedrock-guardrails/) | Guardrails con Amazon Bedrock | Configure Guardrails de seguridad con temas denegados, filtros PII e integración con Knowledge Bases RAG | 25 min |
 | [Lab 05](lab-05-cloudwatch-logging/) | Gobernanza y Auditoría con CloudWatch | Configure Model Invocation Logging en Amazon Bedrock con CloudWatch para capturar y auditar todas las invocaciones a modelos fundacionales | 20 min |

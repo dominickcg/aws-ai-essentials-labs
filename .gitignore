@@ -1,6 +1,5 @@
-# Kiro / IDE
 .kiro/
-.internal/
+docs/
 
 # Dependencies
 node_modules/
